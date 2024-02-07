@@ -1,5 +1,7 @@
 package com.example.oybekchatbot.screens.chat_screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.oybekchatbot.data.MessagesList
+import com.example.oybekchatbot.model.Messages
 import com.example.oybekchatbot.ui.theme.PurpleGrey40
 
 @Composable
@@ -18,13 +20,19 @@ fun ChatScreen(
     onValueChange: (String) -> Unit,
     value: String,
     onSendClicked: () -> Unit,
-    backGroundColor: Color,
+    messageBackGroundColor: Color,
+    backgroundColor: Color,
     starColor: Color,
-    onStarClicked: () -> Unit
+    onStarClicked: () -> Unit,
+    messagesList: List<Messages>,
+    isSendButtonActive: Boolean,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+
+
+
     ) {
         Scaffold(
             bottomBar = {
@@ -32,35 +40,39 @@ fun ChatScreen(
                     onValueChange = onValueChange,
                     value = value,
                     onSendClicked = onSendClicked,
-                    backGroundColor = backGroundColor,
                     starColor = starColor,
-                    onStarClicked = onStarClicked
+                    onStarClicked = onStarClicked,
+                    isSendButtonActive = isSendButtonActive
                 )
             }
         ) { innerPadding ->
-            LazyColumn(modifier = Modifier.padding(innerPadding)) {
+            LazyColumn(
 
-                itemsIndexed(MessagesList) { _, Info ->
+
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .background(backgroundColor),
+                verticalArrangement = Arrangement.Bottom
+
+                    ,
+
+            ) {
+
+                itemsIndexed(messagesList) { _, info ->
                     Message(
-                        text = Info.text,
-                        messageType = Info.messageType,
-                        backgroundColor = PurpleGrey40
+
+                        text = info.text,
+                        messageType = info.messageType,
+                        messageBackgroundColor = messageBackGroundColor,
+                        timeSent = info.timeSent
                     )
+
                 }
 
             }
         }
-        LazyColumn() {
 
-            itemsIndexed(MessagesList) { _, Info ->
-                Message(
-                    text = Info.text,
-                    messageType = Info.messageType,
-                    backgroundColor = PurpleGrey40
-                )
-            }
-
-        }
 
 
     }
@@ -74,8 +86,12 @@ fun bob() {
         onValueChange = { },
         value = "",
         onSendClicked = { },
-        backGroundColor = PurpleGrey40,
-        starColor = Color.Cyan
-    ) {}
+        messageBackGroundColor = PurpleGrey40,
+        starColor = Color.Cyan,
+        messagesList = listOf(Messages(messageType = To, text = "11", timeSent = "19:19")),
+        onStarClicked = {},
+        backgroundColor = Color.Black,
+        isSendButtonActive = true,
+    )
 
 }
