@@ -1,5 +1,6 @@
 package com.example.oybekchatbot
 
+import android.content.res.Resources.Theme
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -47,7 +48,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.oybekchatbot.data.GrayO
 import com.example.oybekchatbot.model.OybekViewModel
+import com.example.oybekchatbot.model.menuScreens
 import com.example.oybekchatbot.screens.chat_screen.ChatScreen
 import com.example.oybekchatbot.screens.menu_screen.MenuScreen
 
@@ -74,7 +77,7 @@ fun OybekApp(
 
         topBar = {
             BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                containerColor = GrayO,
                 modifier = Modifier
                     .height(52.dp)
                     .fillMaxWidth()
@@ -94,7 +97,7 @@ fun OybekApp(
                             .border(
                                 width = 2.dp,
                                 shape = CircleShape,
-                                color = Color.Black
+                                color = Color.White,
                             ),
 
                         )
@@ -104,12 +107,14 @@ fun OybekApp(
                     Icon(
                         Icons.Filled.ArrowBack,
                         contentDescription = null,
+                        tint = Color.White,
                         modifier = Modifier
                             .padding(8.dp)
                             .clickable(onClick = {
                                 viewModel.backNavigation(
                                     navController = navController,
-                                    currentScreen = currentScreen
+                                    currentScreen = currentScreen,
+                                    menuScreen = uiState.menuScreen
                                 )
                             })
 
@@ -121,7 +126,8 @@ fun OybekApp(
                     text = currentScreen.text,
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
-                        .wrapContentWidth(Alignment.CenterHorizontally)
+                        .wrapContentWidth(Alignment.CenterHorizontally),
+                    color = Color.White
 
 
                 )
@@ -129,10 +135,12 @@ fun OybekApp(
                     Icon(
                         Icons.Filled.Menu,
                         contentDescription = null,
+                        tint = Color.White,
                         modifier = Modifier.clickable {
 
                             viewModel.menuNavigation(
-                                navController = navController
+                                navController = navController,
+
                             )
 
 
@@ -151,6 +159,7 @@ fun OybekApp(
             startDestination = OybekScreen.CHATSCREEN.name,
         ) {
             composable(OybekScreen.CHATSCREEN.name) {
+
                 ChatScreen(
                     onValueChange = { viewModel.updateTextFieldValue(it) },
                     value = uiState.textFieldValue,
@@ -166,7 +175,29 @@ fun OybekApp(
 
             }
             composable(OybekScreen.MENUSCREEN.name) {
-                MenuScreen()
+                MenuScreen(
+                    menuBackgroundColor = Color.Black,
+                    contentColor = GrayO,
+                    onClickProfile = { /*TODO*/ },
+                    onClickFeatured = { /*TODO*/ },
+                    onClickLocked = { /*TODO*/ },
+                    onClickSupport = { /*TODO*/ },
+                    onClickNews = {},
+                    onClickDesign = {viewModel.designNavigation()},
+                    currentScreen = uiState.menuScreen ,
+                    backgroundColor = uiState.backgroundColor,
+                    secondaryColor = uiState.secondaryColor,
+                    messageBackgroundColor = uiState.messageBackgroundColor,
+                    onColorClick = { viewModel.onColorClick(it) },
+                    navHostController = navController,
+                    viewModel = viewModel,
+                    navName = OybekScreen.CHATSCREEN
+
+
+
+                )
+
+
             }
 
 

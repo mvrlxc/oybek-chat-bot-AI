@@ -1,6 +1,7 @@
 package com.example.oybekchatbot.screens.chat_screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.oybekchatbot.data.GrayO
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OybekTextField(
@@ -50,12 +53,12 @@ fun OybekTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(0.25.dp)
-                .background(MaterialTheme.colorScheme.background)
+                .background(GrayO)
         )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.onBackground),
+                .background(GrayO),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
 
@@ -67,6 +70,7 @@ fun OybekTextField(
                     .size(30.dp)
                     .wrapContentSize(Alignment.Center)
                     .clickable(onClick = onStarClicked)
+                    .border(1.dp, color = Color.White, CircleShape)
 
             )
 
@@ -76,7 +80,11 @@ fun OybekTextField(
                 onValueChange = onValueChange,
                 shape = CircleShape,
                 colors = (TextFieldDefaults.textFieldColors(
-                    cursorColor = MaterialTheme.colorScheme.background,
+                    cursorColor = Color.White,
+                    focusedIndicatorColor = Color.White,
+                    unfocusedIndicatorColor = Color.White,
+                    containerColor = GrayO,
+                    focusedTextColor = Color.White
 
                 ))
 
@@ -85,7 +93,7 @@ fun OybekTextField(
 
             Icon(
                 Icons.Filled.Send, contentDescription = null,
-                tint = MaterialTheme.colorScheme.inverseOnSurface,
+                tint = Color.White,
                 modifier = Modifier
                     .size(30.dp)
                     .clickable(onClick = onSendClicked, enabled = isSendButtonActive)

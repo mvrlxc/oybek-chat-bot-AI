@@ -27,7 +27,7 @@ class OybekViewModel : ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(
                 textFieldValue = input,
-                isSendButtonActive = _uiState.value.textFieldValue != ""
+                isSendButtonActive = input.isNotEmpty(),
             )
         }
 
@@ -45,10 +45,10 @@ class OybekViewModel : ViewModel() {
 
     private fun getCurrentTime(): String {
 
-            val sdf = SimpleDateFormat("hh:mm")
-            val currentDate = sdf.format(Date())
-            return currentDate.toString()
-        }
+        val sdf = SimpleDateFormat("hh:mm")
+        val currentDate = sdf.format(Date())
+        return currentDate.toString()
+    }
 
 
     fun onMessageSent(messageText: String) {
@@ -63,11 +63,26 @@ class OybekViewModel : ViewModel() {
         }
     }
 
+    fun onColorClick(color: Color) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                messageBackgroundColor = color,
+            )
+        }
+    }
+
     fun backNavigation(
         navController: NavHostController,
-        currentScreen: OybekScreen
+        currentScreen: OybekScreen,
+        menuScreen: menuScreens,
     ) {
-        if (currentScreen == OybekScreen.MENUSCREEN) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                menuScreen = menuScreens.MainScreen
+            )
+
+        }
+        if (currentScreen == OybekScreen.MENUSCREEN && menuScreen == menuScreens.MainScreen) {
             navController.navigate(OybekScreen.CHATSCREEN.name) {
                 popUpTo(OybekScreen.CHATSCREEN.name) {
                     inclusive = true
@@ -75,8 +90,19 @@ class OybekViewModel : ViewModel() {
             }
 
 
-        } else {
+        } else if (currentScreen == OybekScreen.CHATSCREEN) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    menuScreen = menuScreens.MainScreen
+                )
 
+            }
+            navController.navigate(OybekScreen.MENUSCREEN.name) {
+                popUpTo(OybekScreen.MENUSCREEN.name) {
+                    inclusive = true
+                }
+
+            }
         }
     }
 
@@ -91,7 +117,38 @@ class OybekViewModel : ViewModel() {
         }
     }
 
+    fun designNavigation(
 
+    ) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                menuScreen = menuScreens.DesignScreen
+            )
+
+        }
+    }
+
+
+    fun toMenuNavigation(
+
+    ) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                menuScreen = menuScreens.MainScreen
+            )
+
+        }
+    }
+
+
+
+    fun backHandler(navController: NavHostController){
+        navController.navigate(OybekScreen.CHATSCREEN.name){
+            popUpTo(OybekScreen.CHATSCREEN.name) {
+                inclusive = false
+            }
+        }
+    }
 }
 
 
