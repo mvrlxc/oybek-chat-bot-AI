@@ -2,7 +2,9 @@ package com.example.oybekchatbot.screens.chat_screen
 
 import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
+import android.text.style.BackgroundColorSpan
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -27,6 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.oybekchatbot.data.Gray1
+import com.example.oybekchatbot.model.OybekUiState
 import com.example.oybekchatbot.ui.theme.PurpleGrey40
 import java.util.Date
 
@@ -40,6 +44,8 @@ data class MessageType(
     var bottom: Dp,
     var paddingStart: Dp,
     var paddingEnd: Dp,
+    val textColor: Color,
+    val backgroundColor: Color,
 )
 
 val To: MessageType =
@@ -52,7 +58,11 @@ val To: MessageType =
         end = 8.dp,
         bottom = 0.dp,
         paddingStart = 32.dp,
-        paddingEnd = 0.dp
+        paddingEnd = 0.dp,
+        textColor = Color.Black,
+        backgroundColor = Color.Gray
+
+
     )
 val From: MessageType =
     MessageType(
@@ -64,9 +74,10 @@ val From: MessageType =
         end = 8.dp,
         bottom = 3.dp,
         paddingStart = 0.dp,
-        paddingEnd = 32.dp
+        paddingEnd = 32.dp,
+        textColor = Color.White,
+        backgroundColor = Color.Cyan
     )
-
 
 
 @Composable
@@ -78,12 +89,31 @@ fun Message(
     timeSent: String
 
 ) {
+    val isDarkTheme: Boolean = isSystemInDarkTheme()
+    val messageBackgroundColor1: Color
+    var textColor1: Color = Color.White
 
-        Row(
-        modifier = Modifier.fillMaxWidth().padding(start = 32.dp),
+
+    if (messageType == From) {
+        messageBackgroundColor1 = messageBackgroundColor
+    } else {
+        messageBackgroundColor1 = Gray1
+    }
+
+    if (isDarkTheme || messageType == To) {
+        textColor1 = Color.White
+    } else if (messageType == To) {
+        textColor1 = Color.Black
+    }
+
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 0.dp),
         horizontalArrangement = messageType.arragement,
 
-    ) {
+        ) {
 
         Card(
             modifier = modifier
@@ -98,7 +128,7 @@ fun Message(
                 bottomEnd = 35f
             ),
             colors = CardDefaults.cardColors(
-                containerColor = messageBackgroundColor
+                containerColor = messageBackgroundColor1
             ),
 
 
@@ -106,16 +136,18 @@ fun Message(
             Text(
                 text = text,
                 style = MaterialTheme.typography.bodyMedium,
+                color = textColor1,
                 modifier = Modifier
-                    .background(messageBackgroundColor)
+                    .background(messageBackgroundColor1)
                     .padding(8.dp)
 
             )
             Text(
                 text = timeSent,
                 style = MaterialTheme.typography.bodySmall,
+                color = textColor1,
                 modifier = Modifier
-                    .background(messageBackgroundColor)
+                    .background(messageBackgroundColor1)
                     .fillMaxWidth()
                     .padding(
                         start = messageType.start,
